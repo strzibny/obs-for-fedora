@@ -3,6 +3,6 @@ Description=Open Build Service Worker
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obsworker start
-ExecStop=/usr/bin/obsworker stop
+ExecStart=/usr/sbin/obsworker start
+ExecStop=/usr/sbin/obsworker stop
 Restart=on-abort

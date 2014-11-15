@@ -3,6 +3,6 @@ Description=Open Build Service API Delayed Job Handler
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obsapidelayed start
-ExecStop=/usr/bin/obsapidelayed stop
+ExecStart=/usr/sbin/obsapidelayed start
+ExecStop=/usr/sbin/obsapidelayed stop
 Restart=on-abort

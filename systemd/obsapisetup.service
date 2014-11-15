@@ -3,6 +3,6 @@ Description=Open Build Service API Setup
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obsapisetup start
-ExecStop=/usr/bin/obsapisetup stop
+ExecStart=/usr/sbin/obsapisetup start
+ExecStop=/usr/sbin/obsapisetup stop
 Restart=on-abort

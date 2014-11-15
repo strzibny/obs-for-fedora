@@ -3,6 +3,6 @@ Description=Open Build Service Repository Publisher
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obspublisher start
-ExecStop=/usr/bin/obspublisher stop
+ExecStart=/usr/sbin/obspublisher start
+ExecStop=/usr/sbin/obspublisher stop
 Restart=on-abort

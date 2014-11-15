@@ -3,6 +3,6 @@ Description=Open Build Service Storage Setup
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obsstoragesetup start
-ExecStop=/usr/bin/obsstoragesetup stop
+ExecStart=/usr/sbin/obsstoragesetup start
+ExecStop=/usr/sbin/obsstoragesetup stop
 Restart=on-abort

@@ -3,6 +3,6 @@ Description=Open Build Service Signer
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obssigner start
-ExecStop=/usr/bin/obssigner stop
+ExecStart=/usr/sbin/obssigner start
+ExecStop=/usr/sbin/obssigner stop
 Restart=on-abort

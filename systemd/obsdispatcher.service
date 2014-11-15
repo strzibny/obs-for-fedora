@@ -3,6 +3,6 @@ Description=Open Build Service Job Dispatcher
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obsdispatcher start
-ExecStop=/usr/bin/obsdispatcher stop
+ExecStart=/usr/sbin/obsdispatcher start
+ExecStop=/usr/sbin/obsdispatcher stop
 Restart=on-abort

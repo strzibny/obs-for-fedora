@@ -3,6 +3,6 @@ Description=Open Build Service Source Repository Server
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obssrcserver start
-ExecStop=/usr/bin/obssrcserver stop
+ExecStart=/usr/sbin/obssrcserver start
+ExecStop=/usr/sbin/obssrcserver stop
 Restart=on-abort

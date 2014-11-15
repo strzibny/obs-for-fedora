@@ -3,6 +3,6 @@ Description=Open Build Service Warden
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/obswarden start
-ExecStop=/usr/bin/obswarden stop
+ExecStart=/usr/sbin/obswarden start
+ExecStop=/usr/sbin/obswarden stop
 Restart=on-abort
