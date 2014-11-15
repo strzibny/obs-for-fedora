@@ -1,0 +1,8 @@
+[Unit]
+Description=Open Build Service Worker
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/obsworker start
+ExecStop=/usr/bin/obsworker stop
+Restart=on-abort

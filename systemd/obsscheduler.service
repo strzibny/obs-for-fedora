@@ -1,0 +1,9 @@
+[Unit]
+Description=Open Build Service Repository Job Scheduler
+After=syslog.target
+
+[Service]
+# Needs to run more times for each architecture
+ExecStart=/usr/bin/obsscheduler start
+ExecStop=/usr/bin/obsscheduler stop
+Restart=on-abort

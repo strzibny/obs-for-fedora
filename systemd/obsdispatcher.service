@@ -1,0 +1,8 @@
+[Unit]
+Description=Open Build Service Job Dispatcher
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/obsdispatcher start
+ExecStop=/usr/bin/obsdispatcher stop
+Restart=on-abort

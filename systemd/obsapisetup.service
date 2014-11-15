@@ -1,0 +1,8 @@
+[Unit]
+Description=Open Build Service API Setup
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/obsapisetup start
+ExecStop=/usr/bin/obsapisetup stop
+Restart=on-abort

@@ -1,0 +1,3 @@
+SystemD service files for OBS.
+
+They currently call bin scripts that are originally rc scripts. The limitation of this is that calling systemctl obs*.service status cannot return the component status as rc scripts returned. To see the original status one has to call the bin script directly with a 'status' parameter.

@@ -1,0 +1,8 @@
+[Unit]
+Description=Open Build Service Source Service Server
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/obsservice start
+ExecStop=/usr/bin/obsservice stop
+Restart=on-abort

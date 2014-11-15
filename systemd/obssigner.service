@@ -1,0 +1,8 @@
+[Unit]
+Description=Open Build Service Signer
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/obssigner start
+ExecStop=/usr/bin/obssigner stop
+Restart=on-abort
