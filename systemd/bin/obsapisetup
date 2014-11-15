@@ -181,7 +181,7 @@ test@email.address
 		ln -sf $backenddir/certs/server.${FQHOSTNAME}.pem $backenddir/certs/server.pem
 
                 cd $apidir
-		chown -R wwwrun.www $apidir/log
+		chown -R apache.apache $apidir/log
 
 		cat > /etc/issue <<EOF
 Welcome to Open Build Service(OBS) Appliance $OBSVERSION
