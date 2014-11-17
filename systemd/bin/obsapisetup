@@ -118,7 +118,7 @@ case "$1" in
 #               sed -i 's,^read_only_hosts: .*,read_only_hosts: [ "'"$FQHOSTNAME"'" ],' \
 #       	    /srv/www/obs/api/config/options.yml
 		OBSVERSION=`rpm -q --qf '%{VERSION}' obs-server`
-		OS=`head -n 1 /etc/SuSE-release`
+		OS=`head -n 1 /etc/redhat-release`
                 RUN_INITIAL_SETUP=""
                 if [ ! -e "$MYSQL_DATA_DIR"/api_production ]; then
 			echo "Initialize MySQL databases (first time only)"
