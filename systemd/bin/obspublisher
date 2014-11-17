@@ -50,8 +50,9 @@ case "$1" in
 		echo -n "Initializing obspublisher"
                 # FIXME: not nice, this should receive a proper daemon handling, 
                 #        including real logging, pid file and startproc
-		startproc -l "$logdir"/publisher.log \
-		    "$obsdir"/bs_publish
+		#startproc -l "$logdir"/publisher.log \
+		#    "$obsdir"/bs_publish
+		"$obsdir"/bs_publish >> "$logdir"/publisher.log 2>&1 &
 
 	;;
 	stop)
@@ -75,7 +76,7 @@ case "$1" in
 	;;
 	status)
 		echo -n "Checking for obspublisher: "
-		checkproc "$obsdir"/bs_publish
+		#checkproc "$obsdir"/bs_publish
 
 	;;
 	*)

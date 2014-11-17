@@ -50,8 +50,8 @@ case "$1" in
 		chown obsrun:obsrun "$logdir" "$rundir"
                 # FIXME: not nice, this should receive a proper daemon handling, 
                 #        including real logging, pid file and startproc
-		startproc -l "$logdir"/src_server.log "$obsdir"/bs_srcserver
-
+		#startproc -l "$logdir"/src_server.log "$obsdir"/bs_srcserver
+                "$obsdir"/bs_srcserver >> "$logdir"/src_server.log 2>&1 &
 
 		# FIXME:
 
@@ -94,7 +94,7 @@ case "$1" in
 	status)
 		echo "Checking for obssrcserver and running processes: "
 		"$obsdir"/bs_serverstatus "$OBS_RUN_DIR"/bs_srcserver.status
-		checkproc "$obsdir"/bs_srcserver
+		#checkproc "$obsdir"/bs_srcserver
 
 	;;
 	*)

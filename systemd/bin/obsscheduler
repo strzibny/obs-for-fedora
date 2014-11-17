@@ -77,13 +77,13 @@ case "$1" in
 			for i in $OBS_SCHEDULER_ARCHITECTURES; do
 			 	$obsdir/bs_admin --shutdown-scheduler "$i"
 			done
-			for i in `seq 600`; do
-				checkproc bs_sched || break
-			        sleep 1
-			done
-			if checkproc bs_sched ; then
-				killall bs_sched
-			fi
+			#for i in `seq 600`; do
+			#	checkproc bs_sched || break
+			#        sleep 1
+			#done
+			#if checkproc bs_sched ; then
+			#	killall bs_sched
+			#fi
 		fi
 
 	;;
@@ -105,7 +105,7 @@ case "$1" in
 	status)
 		echo -n "Checking for obsscheduler: "
                 # FIXME: needs proper checking for all invoked schedulers
-		checkproc bs_sched
+		#checkproc bs_sched
 
 	;;
 	*)

@@ -50,8 +50,8 @@ case "$1" in
 		chown obsrun:obsrun "$logdir" "$rundir"
                 # FIXME: not nice, this should receive a proper daemon handling, 
                 #        including real logging, pid file and startproc
-		startproc -l "$logdir"/rep_server.log "$obsdir"/bs_repserver
-
+		#startproc -l "$logdir"/rep_server.log "$obsdir"/bs_repserver
+                "$obsdir"/bs_repserver >> "$logdir"/rep_server.log 2>&1 &
 	;;
 	stop)
 		echo -n "Shutting down obsrepserver"
@@ -80,7 +80,7 @@ case "$1" in
 	status)
 		echo "Checking for obsrepserver and running processes: "
                 "$obsdir"/bs_serverstatus "$OBS_RUN_DIR"/bs_repserver.status
-		checkproc "$obsdir"/bs_repserver
+		#checkproc "$obsdir"/bs_repserver
 
 	;;
 	*)
