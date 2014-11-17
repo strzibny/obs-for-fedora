@@ -1,0 +1,19 @@
+module obspol 1.0;
+
+require {
+	type passenger_t;
+	type memcache_port_t;
+	type unreserved_port_t;
+	type httpd_sys_rw_content_t;
+	class tcp_socket name_connect;
+	class dir { getattr search };
+	class file { getattr open ioctl append };
+}
+
+#============= passenger_t ==============
+allow passenger_t httpd_sys_rw_content_t:dir { getattr search };
+allow passenger_t httpd_sys_rw_content_t:file { getattr open ioctl append };
+allow passenger_t memcache_port_t:tcp_socket name_connect;
+
+#!!!! This avc can be allowed using the boolean 'nis_enabled'
+allow passenger_t unreserved_port_t:tcp_socket name_connect;

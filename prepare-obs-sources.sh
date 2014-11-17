@@ -18,3 +18,9 @@ pushd ./systemd
 rm $CURRENT_PATH/open-build-service-2.5.50-systemd.tar.gz
 tar czvf $CURRENT_PATH/open-build-service-2.5.50-systemd.tar.gz *
 popd
+
+# SELinux policies
+pushd ./selinux
+rm $CURRENT_PATH/open-build-service-selinux.tar.gz
+tar czvf $CURRENT_PATH/open-build-service-selinux.tar.gz *
+popd
