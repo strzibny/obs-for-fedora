@@ -50,7 +50,7 @@ case "$1" in
 		mkdir -p "$rundir" "$logdir" "$workdir"
 		chown obsrun:obsrun "$logdir" "$rundir" "$workdir"
 		#startproc -f -l "$logdir"/src_service.log "$obsdir"/bs_service --tempdir "$workdir"
-		"$obsdir"/bs_service --tempdir "$workdir" >> "$logdir"/src_service.log 2>&1 &
+		"$obsdir"/bs_service --tempdir "$workdir" >> "$logdir"/src_service.log 2>&1
 
 	;;
 	stop)
@@ -58,35 +58,11 @@ case "$1" in
 		"$obsdir"/bs_service --stop
 
 	;;
-	restart)
-		## If first returns OK call the second, if first or
-		## second command fails, set echo return value.
-		"$obsdir"/bs_service --restart
-
-	;;
-	try-restart)
-		$0 status
-		if test $? = 0; then
-			$0 restart
-		fi
-		# Remember status and be quiet
-
-	;;
-	reload)
-		$0 status
-                if test $? = 0; then
-                        touch "$rundir"/bs_service.restart
-		fi
-
-	;;
 	status)
-		echo -n "Checking for obsservice  and running processes: "
-                "$obsdir"/bs_serverstatus "$OBS_RUN_DIR"/bs_service.status
-		#checkproc "$obsdir"/bs_service
-
-	;;
+    echo -n "Checking for obsservice  and running processes: "
+    "$obsdir"/bs_serverstatus "$OBS_RUN_DIR"/bs_service.status
 	*)
-		echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+		echo "Usage: $0 {start|stop|status}"
 		exit 1
 	;;
 esac

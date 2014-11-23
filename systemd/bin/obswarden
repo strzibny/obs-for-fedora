@@ -48,11 +48,11 @@ logdir="$OBS_LOG_DIR"
 case "$1" in
 	start)
 		echo -n "Initializing obswarden"
-                # FIXME: not nice, this should receive a proper daemon handling, 
+                # FIXME: not nice, this should receive a proper daemon handling,
                 #        including real logging, pid file and startproc
 		#startproc -l "$logdir"/warden.log \
 		#    "$obsdir"/bs_warden
-		"$obsdir"/bs_warden >> "$logdir"/warden.log 2>&1 &
+		"$obsdir"/bs_warden >> "$logdir"/warden.log 2>&1
 
 	;;
 	stop)
@@ -60,27 +60,8 @@ case "$1" in
 		"$obsdir"/bs_warden --stop
 
 	;;
-	restart)
-		"$obsdir"/bs_warden --restart
-
-	;;
-	try-restart)
-		$0 status
-		if test $? = 0; then
-			$0 restart
-		fi
-		# Remember status and be quiet
-
-	;;
-	reload)
-	;;
-	status)
-		echo -n "Checking for obswarden: "
-		#checkproc "$obsdir"/bs_warden
-
-	;;
 	*)
-		echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+		echo "Usage: $0 {start|stop}"
 		exit 1
 	;;
 esac

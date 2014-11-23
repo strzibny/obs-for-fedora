@@ -50,11 +50,11 @@ case "$1" in
 		echo -n "Initializing obssigner"
 		mkdir -p "$rundir" "$logdir"
 		chown obsrun:obsrun "$logdir" "$rundir"
-                # FIXME: not nice, this should receive a proper daemon handling, 
+                # FIXME: not nice, this should receive a proper daemon handling,
                 #        including real logging, pid file and startproc
 		#startproc -l "$logdir"/signer.log \
 		#    "$obsdir"/bs_signer
-		"$obsdir"/bs_signer >> "$logdir"/signer.log 2>&1 &
+		"$obsdir"/bs_signer >> "$logdir"/signer.log 2>&1
 
 	;;
 	stop)
@@ -62,27 +62,8 @@ case "$1" in
 		"$obsdir"/bs_signer --stop
 
 	;;
-	restart)
-		"$obsdir"/bs_signer --restart
-
-	;;
-	try-restart)
-		$0 status
-		if test $? = 0; then
-			$0 restart
-		fi
-		# Remember status and be quiet
-
-	;;
-	reload)
-	;;
-	status)
-		echo -n "Checking for obssigner: "
-		#checkproc "$obsdir"/bs_signer
-
-	;;
 	*)
-		echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+		echo "Usage: $0 {start|stop}"
 		exit 1
 	;;
 esac

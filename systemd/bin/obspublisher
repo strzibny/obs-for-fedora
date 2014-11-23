@@ -48,11 +48,11 @@ logdir="$OBS_LOG_DIR"
 case "$1" in
 	start)
 		echo -n "Initializing obspublisher"
-                # FIXME: not nice, this should receive a proper daemon handling, 
+                # FIXME: not nice, this should receive a proper daemon handling,
                 #        including real logging, pid file and startproc
 		#startproc -l "$logdir"/publisher.log \
 		#    "$obsdir"/bs_publish
-		"$obsdir"/bs_publish >> "$logdir"/publisher.log 2>&1 &
+		"$obsdir"/bs_publish >> "$logdir"/publisher.log 2>&1
 
 	;;
 	stop)
@@ -60,27 +60,8 @@ case "$1" in
 		"$obsdir"/bs_publish --stop
 
 	;;
-	restart)
-		"$obsdir"/bs_publish --restart
-
-	;;
-	try-restart)
-		$0 status
-		if test $? = 0; then
-			$0 restart
-		fi
-		# Remember status and be quiet
-
-	;;
-	reload)
-	;;
-	status)
-		echo -n "Checking for obspublisher: "
-		#checkproc "$obsdir"/bs_publish
-
-	;;
 	*)
-		echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+		echo "Usage: $0 {start|stop}"
 		exit 1
 	;;
 esac

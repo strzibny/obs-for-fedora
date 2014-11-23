@@ -48,10 +48,10 @@ case "$1" in
 		echo -n "Initializing obssrcserver"
 		mkdir -p "$rundir" "$logdir"
 		chown obsrun:obsrun "$logdir" "$rundir"
-                # FIXME: not nice, this should receive a proper daemon handling, 
+                # FIXME: not nice, this should receive a proper daemon handling,
                 #        including real logging, pid file and startproc
 		#startproc -l "$logdir"/src_server.log "$obsdir"/bs_srcserver
-                "$obsdir"/bs_srcserver >> "$logdir"/src_server.log 2>&1 &
+                "$obsdir"/bs_srcserver >> "$logdir"/src_server.log 2>&1
 
 		# FIXME:
 
@@ -70,27 +70,6 @@ case "$1" in
 		"$obsdir"/bs_srcserver --stop
 
 	;;
-	restart)
-		## If first returns OK call the second, if first or
-		## second command fails, set echo return value.
-		"$obsdir"/bs_srcserver --restart
-
-	;;
-	try-restart)
-		$0 status
-		if test $? = 0; then
-			$0 restart
-		fi
-		# Remember status and be quiet
-
-	;;
-	reload)
-		$0 status
-                if test $? = 0; then
-		        "$obsdir"/bs_srcserver --restart
-		fi
-
-	;;
 	status)
 		echo "Checking for obssrcserver and running processes: "
 		"$obsdir"/bs_serverstatus "$OBS_RUN_DIR"/bs_srcserver.status
@@ -98,7 +77,7 @@ case "$1" in
 
 	;;
 	*)
-		echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+		echo "Usage: $0 {start|stop|status}"
 		exit 1
 	;;
 esac

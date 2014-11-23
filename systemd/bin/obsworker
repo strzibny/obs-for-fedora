@@ -191,7 +191,7 @@ create_initrd()
                 mkinitrd -k $1 -i $2 -m "xfs reiserfs ext3 ext4 fat vfat" -B -S
                 TEMPDIR=$(mktemp -d /tmp/initrd.XXX)
                 pushd $TEMPDIR
-		# unpack initrd to add some extra files 
+		# unpack initrd to add some extra files
                 zcat $2 | cpio -i
                 cat - > etc/udev/rules.d/51-dasd-0.0.0250.rules <<EOF
 ACTION=="add", SUBSYSTEM=="ccw", KERNEL=="0.0.0250",
@@ -285,7 +285,7 @@ case "$1" in
           fi
           sleep 10
         done
-        ln -s . XML 
+        ln -s . XML
         chmod 755 bs_worker
         popd > /dev/null
 
@@ -384,13 +384,8 @@ case "$1" in
     ;;
     reload)
     ;;
-    status)
-        echo -n "Checking for obsworker: "
-        checkproc bs_worker
-
-    ;;
     *)
-        echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+        echo "Usage: $0 {start|stop|try-restart|restart|reload}"
         exit 1
     ;;
 esac

@@ -1,3 +1,3 @@
-Files in this folder are originally OBS rc scripts made to be regular bin files that can be called easily from SystemD service files.
+Files in this folder are originally OBS rc scripts made to be regular bin files that can be called easily from systemd service files.
 
 rc2bin.sh is a helper script for the rc scripts conversion.

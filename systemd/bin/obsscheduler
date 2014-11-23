@@ -64,16 +64,16 @@ case "$1" in
 		mkdir -p "$rundir" "$logdir"
 		chown obsrun:obsrun "$logdir" "$rundir"
 		cd "$obsdir"
-                # FIXME: not nice, this should receive a proper daemon handling, 
+                # FIXME: not nice, this should receive a proper daemon handling,
                 #        including real logging, pid file and startproc
 		for i in $OBS_SCHEDULER_ARCHITECTURES; do
-		        ./bs_sched $i >> "$logdir"/scheduler_$i.log 2>&1 &
+		        ./bs_sched $i >> "$logdir"/scheduler_$i.log 2>&1
 		done
 
 	;;
 	stop|shutdown)
 		echo -n "Shutting down obsscheduler"
-		if checkproc bs_sched; then
+		#if checkproc bs_sched; then
 			for i in $OBS_SCHEDULER_ARCHITECTURES; do
 			 	$obsdir/bs_admin --shutdown-scheduler "$i"
 			done
@@ -84,11 +84,11 @@ case "$1" in
 			#if checkproc bs_sched ; then
 			#	killall bs_sched
 			#fi
-		fi
+		#fi
 
 	;;
 	restart)
-		$0 stop	
+		$0 stop
 		$0 start
 
 	;;
@@ -100,16 +100,8 @@ case "$1" in
 		# Remember status and be quiet
 
 	;;
-	reload)
-	;;
-	status)
-		echo -n "Checking for obsscheduler: "
-                # FIXME: needs proper checking for all invoked schedulers
-		#checkproc bs_sched
-
-	;;
 	*)
-		echo "Usage: $0 {start|stop|status|try-restart|restart|reload}"
+		echo "Usage: $0 {start|stop|status|try-restart|restart}"
 		exit 1
 	;;
 esac
