@@ -61,6 +61,7 @@ case "$1" in
 	status)
     echo -n "Checking for obsservice  and running processes: "
     "$obsdir"/bs_serverstatus "$OBS_RUN_DIR"/bs_service.status
+        ;;
 	*)
 		echo "Usage: $0 {start|stop|status}"
 		exit 1
