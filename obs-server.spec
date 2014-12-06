@@ -421,7 +421,7 @@ pushd src/api
 rm Gemfile.lock
 #sed -i -e '88,98d' Gemfile
 sed -i -e '57,98d' Gemfile
-sed -i -e "s|gem 'nokogiri', '~>1.6.2.1'|gem 'nokogiri', '~>1.6.3.1'|" Gemfile
+sed -i -e "s|gem 'nokogiri', '~>1.6.2.1'|gem 'nokogiri', '= 1.6.3.1'|" Gemfile
 sed -i -e "s|gem 'thinking-sphinx', '> 3.1'|gem 'thinking-sphinx', '>= 3.1'|" Gemfile
 
 # For jquery-ui-rails 5.0.x
