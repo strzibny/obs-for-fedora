@@ -23,7 +23,7 @@ Url:            https://github.com/openSUSE/open-build-service
 # Clone upstream repo and fedora-obs repo
 # ./prepare-obs-sources
 Source0:        open-build-service-%{version}.tar.gz
-# SystemD files for OBS
+# systemd files for OBS
 Source1:        open-build-service-%{version}-systemd.tar.gz
 # From fedora-repo since it differs from upstream a bit
 Source2:        find-requires.sh
@@ -42,7 +42,6 @@ Requires:       diffutils
 #PreReq:         git-core
 Requires:       patch
 # Require the createrepo and python-yum versions
-# which got validated during build
 Requires:       %(/bin/bash -c 'rpm -q --qf "%%{name} = %%{version}-%%{release}" createrepo')
 # Fedora python-yum
 Requires:       %(/bin/bash -c 'rpm -q --qf "%%{name} = %%{version}-%%{release}" yum')
@@ -86,6 +85,7 @@ Requires:       perl-Compress-Zlib
 Requires:       perl-TimeDate
 Requires:       perl-XML-Parser
 Requires:       screen
+Requires:       openslp
 # For build script
 Requires:       psmisc
 # For runlevel script:
@@ -200,7 +200,6 @@ Requires: rubygem(font-awesome-rails)
 Requires: rubygem(tilt) >= 1.4.1
 Requires: rubygem(haml) >= 4.0.5
 Requires: rubygem(hike) >= 1.2.3
-# Mozny problem
 Requires: rubygem(hoptoad_notifier) >= 2.3
 Requires: rubygem(innertube) >= 1.1.0
 #Requires: rubygem(joiner)
@@ -228,7 +227,6 @@ Requires: rubygem(rails) >= 4.1.0
 Requires: rubygem(rails_tokeninput)
 Requires: rubygem(raindrops)
 Requires: rubygem(rdoc) >= 4.1.0
-# mozny problem
 Requires: rubygem(redcarpet)
 Requires: rubygem(riddle) >= 1.5.11
 Requires: rubygem(ruby-ldap)
@@ -410,7 +408,7 @@ tar -xf %{SOURCE1} -C systemd
 mkdir selinux
 tar -xf %{SOURCE4} -C selinux
 
-# Drop build script, the installed one is requires
+# Drop build script, the installed one is required
 rm -rf src/build
 find . -name .git\* -o -name Capfile -o -name deploy.rb | xargs rm -rf
 
@@ -471,13 +469,16 @@ find -type f | xargs sed -i '1,$s/group www/group apache/g'
 # vhosts.d conf.d
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/
 install -m 0644 obs-apache24.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/obs.conf
-# install overview page template
+
+# Install overview page template
 mkdir -p %{buildroot}%{obswwwdir}/overview
 install -m 0644 overview.html.TEMPLATE %{buildroot}%{obswwwdir}/overview/
-# install obs mirror script and obs copy script
+
+# Install OBS mirror script and OBS copy script
 install -d -m 755 %{buildroot}%{_sbindir}/
 install -m 0755 obs_project_update %{buildroot}%{_sbindir}/
-# install runlevel scripts
+
+# Install runlevel scripts
 install -d -m 755 %{buildroot}%{_sysconfdir}/init.d/
 popd
 
@@ -487,7 +488,6 @@ sed -i -e "s/XForward on/#XForward on/g" %{buildroot}%{_sysconfdir}/httpd/conf.d
 # Fix Apache log path
 sed -i -e "s/var\/log\/apache2/var\/log\/httpd/g" %{buildroot}%{_sysconfdir}/httpd/conf.d/obs.conf
  
-
 # REPLACE BY UNIT FILES
 # obsapidelayed and obsapisetup handle differently
 mkdir -p %{buildroot}%{_unitdir}
@@ -618,19 +618,19 @@ getent passwd obsrun >/dev/null || \
 exit 0
 
 %preun
-systemctl stop obssrcserver obsrepserver obsdispatcher obsscheduler obspublisher obswarden obssigner
+#systemctl stop obssrcserver obsrepserver obsdispatcher obsscheduler obspublisher obswarden obssigner
 
 %preun -n obs-worker
-systemctl stop obsworker
+#systemctl stop obsworker
 
 %post
-systemctl restart obssrcserver obsrepserver obsdispatcher obsscheduler obspublisher obswarden obssigner
+#systemctl restart obssrcserver obsrepserver obsdispatcher obsscheduler obspublisher obswarden obssigner
 
 %preun -n obs-source_service
-systemctl stop obsservice
+#systemctl stop obsservice
 
 %post -n obs-source_service
-systemctl restart obsservice
+#systemctl restart obsservice
 
 %posttrans
 [ -d /srv/obs ] || install -d -o obsrun -g obsrun /srv/obs
