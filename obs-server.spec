@@ -439,6 +439,11 @@ pushd docs/api/api
 make apidocs
 popd
 
+# Make sure Build is on path (in @INC)
+pushd src/backend
+sed -i "55iuse lib '/usr/lib/build'\;" ./bs_srcserver
+popd
+
 # Make SELinux policy
 pushd selinux
 for selinuxvariant in %{selinux_variants}
