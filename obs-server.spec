@@ -16,17 +16,18 @@ Name:           obs-server
 Summary:        The Open Build Service Server Component
 License:        GPLv2 && GPLv3
 Group:          Applications/System
-#Version:        2.5.50_113_g117c617
+
+%global stable_version 2.5.50
 
 # Git release 3647e3
-Version:        2.5.50
-Release:        2
+Version:        2.5.50.git3647e3
+Release:        3
 Url:            https://github.com/openSUSE/open-build-service
 # Clone upstream repo and fedora-obs repo
 #   ./prepare-obs-sources
-Source0:        open-build-service-%{version}.tar.gz
+Source0:        open-build-service-%{stable_version}.tar.gz
 # systemd files for OBS
-Source1:        open-build-service-%{version}-systemd.tar.gz
+Source1:        open-build-service-%{stable_version}-systemd.tar.gz
 # From fedora-repo since it differs from upstream a bit
 Source2:        find-requires.sh
 # Static assets for bento theme
@@ -168,8 +169,8 @@ Requires: rubygem(activerecord) >= 4.1.0
 Requires: rubygem(acts_as_list) >= 0.4.0
 Requires: rubygem(addressable) >= 2.3.6
 Requires: rubygem(mini_portile) >= 0.6.0
-Requires: rubygem(nokogiri) = 1.6.5
-#Requires: rubygem(nokogiri) < 1.7
+Requires: rubygem(nokogiri) >= 1.6.3
+Requires: rubygem(nokogiri) < 1.7
 Requires: rubygem(xpath) >= 2.0.0
 Requires: rubygem(capybara)
 Requires: rubygem(capybara_minitest_spec)
@@ -274,7 +275,7 @@ BuildRequires: rubygem(activerecord) >= 4.1.0
 BuildRequires: rubygem(acts_as_list) >= 0.4.0
 BuildRequires: rubygem(addressable) >= 2.3.6
 BuildRequires: rubygem(mini_portile) >= 0.6.0
-BuildRequires: rubygem(nokogiri) = 1.6.5
+BuildRequires: rubygem(nokogiri) >= 1.6.3
 BuildRequires: rubygem(xpath) >= 2.0.0
 BuildRequires: rubygem(capybara)
 BuildRequires: rubygem(capybara_minitest_spec)
@@ -399,7 +400,7 @@ Requires:       ruby(release)
 obs_project_update is a tool to copy a packages of a project from one obs to another.
 
 %prep
-%setup -q -n open-build-service-%version
+%setup -q -n open-build-service-%stable_version
 
 # Extract systemd files
 mkdir systemd
@@ -420,11 +421,14 @@ pushd src/api
 rm Gemfile.lock
 #sed -i -e '88,98d' Gemfile
 sed -i -e '57,98d' Gemfile
-sed -i -e "s|gem 'nokogiri', '~>1.6.3'|gem 'nokogiri', '= 1.6.5'|" Gemfile
+#sed -i -e "s|gem 'nokogiri', '~>1.6.3'|gem 'nokogiri', '~> 1.6.4'|" Gemfile
 sed -i -e "s|gem 'thinking-sphinx', '> 3.1'|gem 'thinking-sphinx', '>= 3.1'|" Gemfile
 
 # For jquery-ui-rails 5.0.x
 sed -i -e 's|jquery\.ui\.|jquery-ui/|' app/assets/javascripts/webui/application.js 
+
+# bundle with RPM installed RubyGems
+bundle --local
 
 # Static assets for bento theme
 tar -xf %{SOURCE3} -C app/assets/images/images
@@ -884,3 +888,6 @@ fi
 %_docdir/README.devel
 
 %changelog
+* Mon Dec 08 2014 Josef Stribny - 2.5.50-3
+- rebuilt
+
