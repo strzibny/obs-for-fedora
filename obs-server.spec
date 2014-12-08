@@ -1,3 +1,5 @@
+# This spec tries to follow upstream packaging
+
 # Define OBS install directories
 %global obslibdir /usr/lib/obs
 %global obsserverdir %{obslibdir}/server
@@ -18,17 +20,17 @@ Group:          Applications/System
 
 # Git release 3647e3
 Version:        2.5.50
-Release:        1
+Release:        2
 Url:            https://github.com/openSUSE/open-build-service
 # Clone upstream repo and fedora-obs repo
-# ./prepare-obs-sources
+#   ./prepare-obs-sources
 Source0:        open-build-service-%{version}.tar.gz
 # systemd files for OBS
 Source1:        open-build-service-%{version}-systemd.tar.gz
 # From fedora-repo since it differs from upstream a bit
 Source2:        find-requires.sh
 # Static assets for bento theme
-# http://static.opensuse.org/themes/bento/css/images/
+#   http://static.opensuse.org/themes/bento/css/images/
 Source3:        bento-images.tar.gz
 # SELinux policies
 Source4:        open-build-service-selinux.tar.gz
@@ -39,7 +41,6 @@ Requires:       obs-worker
 Requires:       perl-BSSolv >= 0.01
 # Required by source server
 Requires:       diffutils
-#PreReq:         git-core
 Requires:       patch
 # Require the createrepo and python-yum versions
 Requires:       %(/bin/bash -c 'rpm -q --qf "%%{name} = %%{version}-%%{release}" createrepo')
@@ -92,7 +93,7 @@ Requires:       psmisc
 Requires:       curl
 Requires:       bash
 Requires:       binutils
-# bsdtar on fedora should be provided by libarchive
+# bsdtar on Fedora should be provided by libarchive
 Requires:       libarchive
 Requires:       util-linux >= 2.16
 
@@ -167,8 +168,8 @@ Requires: rubygem(activerecord) >= 4.1.0
 Requires: rubygem(acts_as_list) >= 0.4.0
 Requires: rubygem(addressable) >= 2.3.6
 Requires: rubygem(mini_portile) >= 0.6.0
-Requires: rubygem(nokogiri) >= 1.6.2.1
-Requires: rubygem(nokogiri) < 1.7
+Requires: rubygem(nokogiri) = 1.6.5
+#Requires: rubygem(nokogiri) < 1.7
 Requires: rubygem(xpath) >= 2.0.0
 Requires: rubygem(capybara)
 Requires: rubygem(capybara_minitest_spec)
@@ -273,7 +274,7 @@ BuildRequires: rubygem(activerecord) >= 4.1.0
 BuildRequires: rubygem(acts_as_list) >= 0.4.0
 BuildRequires: rubygem(addressable) >= 2.3.6
 BuildRequires: rubygem(mini_portile) >= 0.6.0
-BuildRequires: rubygem(nokogiri) >= 1.6.2.1
+BuildRequires: rubygem(nokogiri) = 1.6.5
 BuildRequires: rubygem(xpath) >= 2.0.0
 BuildRequires: rubygem(capybara)
 BuildRequires: rubygem(capybara_minitest_spec)
@@ -419,7 +420,7 @@ pushd src/api
 rm Gemfile.lock
 #sed -i -e '88,98d' Gemfile
 sed -i -e '57,98d' Gemfile
-sed -i -e "s|gem 'nokogiri', '~>1.6.2.1'|gem 'nokogiri', '= 1.6.3.1'|" Gemfile
+sed -i -e "s|gem 'nokogiri', '~>1.6.3'|gem 'nokogiri', '= 1.6.5'|" Gemfile
 sed -i -e "s|gem 'thinking-sphinx', '> 3.1'|gem 'thinking-sphinx', '>= 3.1'|" Gemfile
 
 # For jquery-ui-rails 5.0.x
@@ -487,21 +488,19 @@ popd
 sed -i -e "s/XForward on/#XForward on/g" %{buildroot}%{_sysconfdir}/httpd/conf.d/obs.conf
 # Fix Apache log path
 sed -i -e "s/var\/log\/apache2/var\/log\/httpd/g" %{buildroot}%{_sysconfdir}/httpd/conf.d/obs.conf
- 
-# REPLACE BY UNIT FILES
-# obsapidelayed and obsapisetup handle differently
+
+# Put systemd files in place
 mkdir -p %{buildroot}%{_unitdir}
 for i in obssrcserver obsrepserver obsscheduler obsworker obspublisher obsdispatcher \
          obssigner obswarden obsservice obsstoragesetup obsapidelayed obsapisetup
 do
   install -m 0755 systemd/bin/$i %{buildroot}%{_sbindir}/$i
   install -m 0644 systemd/$i.service %{buildroot}%{_unitdir}/$i.service
-  #ln -sf %{_sysconfdir}/init.d/$i %{buildroot}%{_sbindir}/rc$i
 done
 
 pushd dist
 
-# install logrotate
+# Install logrotate
 install -d -m 755 %{buildroot}%{_sysconfdir}/logrotate.d/
 for i in obs-api obs-server ; do
   install -m 0644 ${i}.logrotate \
@@ -566,9 +565,6 @@ ln -sf /usr/lib/build %{buildroot}%{obsserverdir}/build # just for check section
 cp -a * %{buildroot}%{obsserverdir}/
 rm -r   %{buildroot}%{obsserverdir}/testdata
 cd ..
-
-# There's dupes between webui and api:
-#%fdupes %{buildroot}%{obswwwdir}
 
 # These config files must not be hard linked
 install -m 644 api/config/database.yml.example %{buildroot}%{obsapidir}/config/database.yml

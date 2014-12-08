@@ -4,9 +4,12 @@ require {
 	type passenger_t;
 	type memcache_port_t;
 	type unreserved_port_t;
+        type httpd_sys_content_t;
 	type httpd_sys_rw_content_t;
+        type logrotate_t;
 	class tcp_socket name_connect;
 	class dir { getattr search };
+        class dir read;
 	class file { getattr open ioctl append };
 }
 
@@ -17,3 +20,6 @@ allow passenger_t memcache_port_t:tcp_socket name_connect;
 
 #!!!! This avc can be allowed using the boolean 'nis_enabled'
 allow passenger_t unreserved_port_t:tcp_socket name_connect;
+
+#============= logrotate_t ==============
+allow logrotate_t httpd_sys_content_t:dir read;
