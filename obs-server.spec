@@ -21,7 +21,7 @@ Group:          Applications/System
 
 # Git release 3647e3
 Version:        2.5.50.git3647e3
-Release:        3
+Release:        4
 Url:            https://github.com/openSUSE/open-build-service
 # Clone upstream repo and fedora-obs repo
 #   ./prepare-obs-sources
@@ -127,15 +127,6 @@ Requires:       perl(GD)
 # Fedora 21 has version 2.1.5
 Requires:       sphinx >= 2.1.5
 
-# SELinux
-%if "%{_selinux_policy_version}" != ""
-Requires:       selinux-policy >= %{_selinux_policy_version}
-%endif
-Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /sbin/semanage
-Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/semanage
-BuildRequires:  checkpolicy
-BuildRequires:  selinux-policy-devel
-BuildRequires:  /usr/share/selinux/devel/policyhelp
 BuildRequires:  hardlink
 BuildRequires:  rubygem(bundler)
 BuildRequires:  createrepo
@@ -360,6 +351,25 @@ BuildRequires: nodejs
 
 %description -n obs-api
 This is the API server instance, and the web client for the OBS.
+
+
+%package -n obs-selinux
+Summary:        The Open Build Service SELinux policies
+Group:          Applications/System
+# SELinux
+%if "%{_selinux_policy_version}" != ""
+Requires:       selinux-policy >= %{_selinux_policy_version}
+%endif
+Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /sbin/semanage
+Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/semanage
+BuildRequires:  checkpolicy
+BuildRequires:  selinux-policy-devel
+BuildRequires:  /usr/share/selinux/devel/policyhelp
+
+
+%description -n obs-selinux
+SELinux policy files and rules.
+
 
 %package -n obs-devel
 Summary:        The Open Build Service API and WEBUI Testsuite
@@ -675,20 +685,18 @@ chown root.apache $SECRET_KEY
 touch %{obsapidir}/log/production.log
 chown %{apache_user}:%{apache_group} %{obsapidir}/log/production.log
 
+%post -n obs-selinux
 # SELinux
 for selinuxvariant in %{selinux_variants}
 do
   /usr/sbin/semodule -s ${selinuxvariant} -i \
     %{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp &> /dev/null || :
 done
-#/sbin/restorecon -vR /srv/obs || :
-#/sbin/restorecon -vR /usr/lib/obs || :
+/sbin/restorecon -vR /srv || :
 
 # SELinux ports that are not part of loadable policy
 semanage port -a -t http_port_t -p tcp 82
 semanage port -a -t http_port_t -p tcp 5352
-
-systemctl restart httpd memcached obsapisetup obsapidelayed
 
 %postun -n obs-api
 if [ $1 -eq 0 ] ; then
@@ -875,6 +883,8 @@ fi
 %{obsapidir}/log/error.log
 %{obsapidir}/log/lastevents.access.log
 %{obsapidir}/log/production.log
+
+%files -n obs-selinux
 # SELinux
 #%%doc selinux/*
 %{_datadir}/selinux/*/%{modulename}.pp
@@ -893,6 +903,9 @@ fi
 %_docdir/README.devel
 
 %changelog
+* Mon Dec 08 2014 Josef Stribny - 2.5.50.git3647e3-4
+- Move SELinux stuff into its own sub-package
+
 * Mon Dec 08 2014 Josef Stribny - 2.5.50-3
 - rebuilt
 
