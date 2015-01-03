@@ -360,8 +360,8 @@ Group:          Applications/System
 %if "%{_selinux_policy_version}" != ""
 Requires:       selinux-policy >= %{_selinux_policy_version}
 %endif
-Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /sbin/semanage
-Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/semanage
+Requires(post):   %{_sbindir}/semodule, %{_sbindir}/restorecon, %{_sbindir}/semanage
+Requires(postun): %{_sbindir}/semodule, %{_sbindir}/restorecon, %{_sbindir}/semanage
 BuildRequires:  checkpolicy
 BuildRequires:  selinux-policy-devel
 BuildRequires:  /usr/share/selinux/devel/policyhelp
@@ -435,7 +435,7 @@ sed -i -e '57,98d' Gemfile
 sed -i -e "s|gem 'thinking-sphinx', '> 3.1'|gem 'thinking-sphinx', '>= 3.1'|" Gemfile
 
 # For jquery-ui-rails 5.0.x
-sed -i -e 's|jquery\.ui\.|jquery-ui/|' app/assets/javascripts/webui/application.js 
+sed -i -e 's|jquery\.ui\.|jquery-ui/|' app/assets/javascripts/webui/application.js
 
 # bundle with RPM installed RubyGems
 bundle --local
@@ -475,7 +475,7 @@ do
 done
 popd
 
-/usr/sbin/hardlink -cv %{buildroot}%{_datadir}/selinux
+%{_sbindir}/hardlink -cv %{buildroot}%{_datadir}/selinux
 
 # Install all distribution files
 pushd dist
@@ -603,7 +603,7 @@ rm -rf tmp/cache/sass tmp/cache/assets config/secret.key
 export BUNDLE_WITHOUT=test:assets:development
 export BUNDLE_FROZEN=1
 bundle config --local frozen 1
-bundle config --local without test:assets:development 
+bundle config --local without test:assets:development
 # reinstall
 install config/database.yml.example config/database.yml
 : > log/production.log
@@ -612,7 +612,7 @@ popd
 
 mkdir -p %{buildroot}%{_docdir}
 cat > %{buildroot}%{_docdir}/README.devel <<EOF
-This package does not contain any development files. But it helps you start with 
+This package does not contain any development files. But it helps you start with
 git development - look at http://github.com/opensuse/open-build-service
 EOF
 
@@ -621,14 +621,14 @@ rm -rf /tmp/obs.mysql.db /tmp/obs.test.mysql.socket
 %pre
 getent group obsrun >/dev/null || groupadd -r obsrun
 getent passwd obsrun >/dev/null || \
-    %{_sbindir}/useradd -r -g obsrun -d %{obslibdir} -s /sbin/nologin \
+    %{_sbindir}/useradd -r -g obsrun -d %{obslibdir} -s %{_sbindir}/nologin \
     -c "User for build service backend" obsrun
 exit 0
 
 %pre -n obs-worker
 getent group obsrun >/dev/null || groupadd -r obsrun
 getent passwd obsrun >/dev/null || \
-    %{_sbindir}/useradd -r -g obsrun -d %{obslibdir} -s /sbin/nologin \
+    %{_sbindir}/useradd -r -g obsrun -d %{obslibdir} -s %{_sbindir}/nologin \
     -c "User for build service backend" obsrun
 exit 0
 
@@ -689,10 +689,10 @@ chown %{apache_user}:%{apache_group} %{obsapidir}/log/production.log
 # SELinux
 for selinuxvariant in %{selinux_variants}
 do
-  /usr/sbin/semodule -s ${selinuxvariant} -i \
+  %{_sbindir}/semodule -s ${selinuxvariant} -i \
     %{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp &> /dev/null || :
 done
-/sbin/restorecon -vR /srv || :
+%{_sbindir}/restorecon -vR /srv || :
 
 # SELinux ports that are not part of loadable policy
 semanage port -a -t http_port_t -p tcp 82
@@ -702,10 +702,10 @@ semanage port -a -t http_port_t -p tcp 5352
 if [ $1 -eq 0 ] ; then
   for selinuxvariant in %{selinux_variants}
   do
-     /usr/sbin/semodule -s ${selinuxvariant} -r %{modulename} &> /dev/null || :
+     %{_sbindir}/semodule -s ${selinuxvariant} -r %{modulename} &> /dev/null || :
   done
   #[ -d %{_localstatedir}/cache/myapp ]  && \
-  #  /sbin/restorecon -R /srv/obs &> /dev/null || :
+  #  %{_sbindir}/restorecon -R /srv/obs &> /dev/null || :
 fi
 
 %files
@@ -794,7 +794,7 @@ fi
 %{obsserverdir}/worker-deltagen.spec
 %config(noreplace) %{obsserverdir}/BSConfig.pm
 %config(noreplace) %{_sysconfdir}/slp.reg.d/*
-# Created via %%post since RPM fails while switching from 
+# Created via %%post since RPM fails while switching from
 # directory to symlink
 %ghost %{obsserverdir}/build
 
@@ -903,9 +903,8 @@ fi
 %_docdir/README.devel
 
 %changelog
+* Sat Jan 03 2015 Josef Stribny - 2.5.50.git3647e3-4
+- Use sbin macro everywhere
+
 * Mon Dec 08 2014 Josef Stribny - 2.5.50.git3647e3-4
 - Move SELinux stuff into its own sub-package
-
-* Mon Dec 08 2014 Josef Stribny - 2.5.50-3
-- rebuilt
-
